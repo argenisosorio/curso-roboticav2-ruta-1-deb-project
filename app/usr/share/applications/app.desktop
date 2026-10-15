@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Curso de Robótica - Ruta 1
+Comment=Curso de Robótica - Ruta 1, empaquetado con Python PyWebView en DEB.
+Exec=python3 /opt/app/app.py
+Icon=app-icon
+Type=Application
+Terminal=false
+Categories=Education;Development;

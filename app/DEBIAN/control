@@ -1,0 +1,8 @@
+Package: curso-roboticav2-ruta-1-deb
+Version: 1.0
+Section: utils
+Priority: optional
+Architecture: all
+Depends: python3, python3-gi, python3-webview, gir1.2-webkit2-4.1
+Maintainer: Ing. Argenis Osorio <aosorio@cenditel.gob.ve>
+Description: Curso de Robótica - Ruta 1, empaquetado con Python PyWebView en DEB.
