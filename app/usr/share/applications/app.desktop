@@ -5,4 +5,4 @@ Exec=python3 /opt/app/app.py
 Icon=app-icon
 Type=Application
 Terminal=false
-Categories=Education;Development;
+Categories=Education;
