@@ -1,26 +1,62 @@
+# Script para iniciar un servidor local y abrir la aplicación eXeLearning en el
+# navegador predeterminado.
+
 import os
 import sys
-import webview
+import threading
+import time
+import webbrowser
+import bottle
 
-def get_html_path():
-    # Obtiene la ruta absoluta de la carpeta 'html'
+# Define la aplicación Bottle para servir los archivos estáticos de eXeLearning
+app_bottle = bottle.Bottle()
+
+def get_base_dir():
+    """
+    Obtiene el directorio base del script, considerando si está ejecutándose
+    como un ejecutable congelado (por ejemplo, con PyInstaller) o como un script
+    normal.
+    """
     if getattr(sys, 'frozen', False):
-        base_dir = os.path.dirname(sys.executable)
-    else:
-        base_dir = os.path.dirname(os.path.abspath(__file__))
-    return os.path.join(base_dir, 'html', 'index.html')
+        return os.path.dirname(sys.executable)
+    return os.path.dirname(os.path.abspath(__file__))
+
+@app_bottle.route('/<filepath:path>')
+def server_static(filepath):
+    """
+    Sirve archivos estáticos desde el directorio 'html' de eXeLearning.
+    """
+    html_dir = os.path.join(get_base_dir(), 'html')
+    return bottle.static_file(filepath, root=html_dir)
+
+@app_bottle.route('/')
+def index():
+    """
+    Sirve el archivo index.html como página principal.
+    """
+    html_dir = os.path.join(get_base_dir(), 'html')
+    return bottle.static_file('index.html', root=html_dir)
+
+def run_server():
+    # Ejecuta el servidor local en el puerto 8080 (sin quiet=True para ver registros en consola)
+    bottle.run(app_bottle, host='127.0.0.1', port=8080)
 
 if __name__ == '__main__':
-    html_file = get_html_path()
+    # Inicia el servidor local en un hilo secundario
+    t = threading.Thread(target=run_server, daemon=True)
+    t.start()
 
-    # Crea la ventana apuntando al index.html
-    window = webview.create_window(
-        title='Curso de Robótica - Ruta 1',
-        url=f'file://{html_file}',
-        width=1024,
-        height=768,
-        resizable=True
-    )
+    url = 'http://127.0.0.1:8080/'
 
-    # Inicia la app usando GTK/WebKit nativo en Linux
-    webview.start(gui='gtk')
+    # Da un breve respiro al hilo para asegurar que el servidor esté listo
+    time.sleep(0.5)
+
+    # Abre la aplicación en el navegador predeterminado
+    webbrowser.open(url)
+
+    # Mantiene el script principal activo mientras el servidor corre
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        sys.exit(0)
