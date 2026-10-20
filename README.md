@@ -1,4 +1,4 @@
-# Curso de Robótica - Ruta 1, empaquetado con Python PyWebView en DEB
+# Curso de Robótica v2 - Ruta 1, empaquetado con Python PyWebView en DEB
 
 **Generado e Instalado en:** Linux Debian 13.
 
